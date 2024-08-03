@@ -15,6 +15,8 @@ def read_credentials():
     return creds
 
 # Load credentials
+# OPTIONALLY replace credentials with your Twitter API information. It is smarter for data
+# security to hide in an envision or txt file. 
 credentials = read_credentials()
 api_key = credentials['api_key']
 api_key_secret = credentials['api_key_secret']
@@ -35,12 +37,16 @@ def get_presto_stock_price():
     except Exception as e:
         print(f"Error during tweeting stock price: {e}")
 
-# Log system info and Unix time on login
 def log_system_info():
     unix_time = int(time.time())
     system_info = os.uname()  # For Unix-based systems
-    print(f"Logged in successfully on PC: {system_info}")
-    print(f"Unix time: {unix_time}")
+    bold_text = "𝗧𝗵𝗲𝗗𝗮𝗶𝗹𝘆𝗣𝗿𝗲𝘀𝘁𝗼"  # Unicode bold text
+    login_message = f"{bold_text} Logged in successfully on PC: {system_info}\nUnix time: {unix_time}"
+    print(login_message)
+    try:
+        client.create_tweet(text=login_message)
+    except Exception as e:
+        print(f"Error during tweeting system info: {e}")
 
 # Schedule the stock price tweet every 24 hours
 schedule.every(24).hours.do(get_presto_stock_price)
